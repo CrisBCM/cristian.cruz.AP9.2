@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Entity
 public class Client {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -17,6 +16,8 @@ public class Client {
     private String firstName;
     private String lastName;
     private String email;
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private Set<Card> cards = new HashSet<>();
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
@@ -56,6 +57,10 @@ public class Client {
         return loans;
     }
 
+    public Set<Card> getCards() {
+        return cards;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -76,5 +81,9 @@ public class Client {
     public void addLoan(ClientLoan clientLoan){
         clientLoan.setClient(this);
         loans.add(clientLoan);
+    }
+    public void addCard(Card card){
+        card.setClient(this);
+        cards.add(card);
     }
 }
