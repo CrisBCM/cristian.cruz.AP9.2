@@ -2,10 +2,12 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +22,8 @@ public class HomebankingApplication {
 		SpringApplication.run(HomebankingApplication.class, args);
 
 	}
-
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository
 			, AccountRepository accountRepository
@@ -39,8 +42,8 @@ public class HomebankingApplication {
 			Loan loanPersonal = new Loan("Personal", 100000, paymentsPersonal);
 			Loan loanAutomotriz = new Loan("Automotriz", 300000, paymentsAutomotriz);
 
-			Client client1 = new Client("Melba", "Morel", "melbamorel@gmail.com");
-			Client client2 = new Client("Cristian", "Cruz", "cristianbcm1999@gmail.com");
+			Client client1 = new Client("Melba", "Morel", "melbamorel@gmail.com", passwordEncoder.encode("1234"));
+			Client client2 = new Client("Cristian", "Cruz", "cristianbcm1999@gmail.com",passwordEncoder.encode("1234"));
 
 			Card cardGold = new Card(client1.getFirstName() + " " + client1.getLastName(),CardType.DEBIT, CardColor.GOLD, "5463-1264-2543", 543, LocalDate.now(), LocalDate.now().plusYears(5), client1);
 			Card cardTitanium = new Card(client1.getFirstName() + " " + client1.getLastName(),CardType.CREDIT, CardColor.TITANIUM, "7765-2214-6654", 142, LocalDate.now(), LocalDate.now().plusYears(5), client1);
@@ -74,10 +77,10 @@ public class HomebankingApplication {
 			Account account3 = new Account("VIN003", LocalDateTime.now(), 2000, client2);
 			Account account4 = new Account("VIN004", LocalDateTime.now(), 4600, client2);
 
-			Transaction transaction1 = new Transaction(TransactionType.CREDITO, 5000, "Transaccion de un amigo", LocalDateTime.now());
-			Transaction transaction2 = new Transaction(TransactionType.DEBITO, -2000, "Compra de MousePad", LocalDateTime.now());
-			Transaction transaction3 = new Transaction(TransactionType.CREDITO, 700, "Transaccion a Nicolas", LocalDateTime.now());
-			Transaction transaction4 = new Transaction(TransactionType.DEBITO, -7000, "Compra de teclado", LocalDateTime.now());
+			Transaction transaction1 = new Transaction(TransactionType.CREDIT, 5000, "Transaccion de un amigo", LocalDateTime.now());
+			Transaction transaction2 = new Transaction(TransactionType.DEBIT, -2000, "Compra de MousePad", LocalDateTime.now());
+			Transaction transaction3 = new Transaction(TransactionType.CREDIT, 700, "Transaccion a Nicolas", LocalDateTime.now());
+			Transaction transaction4 = new Transaction(TransactionType.DEBIT, -7000, "Compra de teclado", LocalDateTime.now());
 
 			account1.addTransaction(transaction1);
 			account2.addTransaction(transaction2);
