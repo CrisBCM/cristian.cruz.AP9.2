@@ -27,13 +27,6 @@ public class ClientLoan {
         this.payments = payments;
     }
 
-    public ClientLoan(int amount, int payments, Client client, Loan loan) {
-        this.amount = amount;
-        this.payments = payments;
-        this.client = client;
-        this.loan = loan;
-    }
-
     public Long getId() {
         return id;
     }
