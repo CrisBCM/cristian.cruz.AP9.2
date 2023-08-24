@@ -1,7 +1,9 @@
 package com.mindhub.homebanking.controllers;
 
 import com.mindhub.homebanking.dtos.ClientDTO;
+import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private AccountRepository accountRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -53,7 +58,22 @@ public class ClientController {
 
         }
 
-        clientRepository.save(new Client(firstName, lastName, email, passwordEncoder.encode(password)));
+        int randomNumber;
+        String numberAccount;
+
+        do {
+            randomNumber = (int)Math.floor(Math.random() * (99999999 - 100 + 1) + 100);
+            numberAccount = "VIN-" + randomNumber;
+
+        }while(accountRepository.existsByNumber(numberAccount));
+
+        Account newAccount = new Account(numberAccount, LocalDateTime.now(), 0);
+
+        Client newClient = new Client(firstName, lastName, email, passwordEncoder.encode(password));
+        newClient.addAcount(newAccount);
+
+        clientRepository.save(newClient);
+        accountRepository.save(newAccount);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

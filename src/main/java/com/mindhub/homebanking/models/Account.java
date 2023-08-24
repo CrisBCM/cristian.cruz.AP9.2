@@ -40,7 +40,7 @@ public class Account {
         return number;
     }
 
-    public LocalDateTime getCreationDate() {
+    public LocalDateTime getDate() {
         return creationDate;
     }
 

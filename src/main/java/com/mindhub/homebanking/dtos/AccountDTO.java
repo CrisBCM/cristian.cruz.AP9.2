@@ -17,7 +17,7 @@ public class AccountDTO {
     public AccountDTO (Account account){
         id = account.getId();
         number = account.getNumber();
-        creationDate = account.getCreationDate();
+        creationDate = account.getDate();
         balance = account.getBalance();
         transactions = account.getTransactions()
                             .stream()
@@ -33,7 +33,7 @@ public class AccountDTO {
         return number;
     }
 
-    public LocalDateTime getCreationDate() {
+    public LocalDateTime getDate() {
         return creationDate;
     }
 
