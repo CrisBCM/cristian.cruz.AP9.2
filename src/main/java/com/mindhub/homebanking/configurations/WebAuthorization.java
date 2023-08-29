@@ -29,7 +29,8 @@ public class WebAuthorization{
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/clients").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/clients", "/api/clients/**").hasAuthority("CLIENT")
-                .antMatchers(HttpMethod.POST, "/api/logout").hasAuthority("CLIENT");
+                .antMatchers(HttpMethod.POST, "/api/logout").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST, "/api/transactions").hasAuthority("CLIENT");
 
 
         http.csrf().disable();
