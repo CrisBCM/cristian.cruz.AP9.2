@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RepositoryRestResource
 public interface LoanRepository extends JpaRepository<Loan, Long> {
-
+    public boolean existsById (Long id);
 }
