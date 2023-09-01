@@ -11,4 +11,6 @@ public interface AccountService {
     public Account findById(Long accountId);
     public String getRandomNumberAccount();
     public void createClientAccount(String email);
+    public Account findByNumber(String number);
+    public Boolean existsByNumber(String number);
 }

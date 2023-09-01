@@ -6,11 +6,13 @@ import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class AccountServiceImplement implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
@@ -57,5 +59,15 @@ public class AccountServiceImplement implements AccountService {
         clientRepository.findByEmail(email).addAcount(newAccount);
 
         accountRepository.save(newAccount);
+    }
+
+    @Override
+    public Account findByNumber(String number) {
+        return accountRepository.findByNumber(number);
+    }
+
+    @Override
+    public Boolean existsByNumber(String number) {
+        return accountRepository.existsByNumber(number);
     }
 }

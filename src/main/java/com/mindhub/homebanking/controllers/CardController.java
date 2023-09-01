@@ -6,6 +6,8 @@ import com.mindhub.homebanking.models.CardType;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.CardRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.CardService;
+import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,52 +24,21 @@ import java.time.LocalDateTime;
 @RequestMapping("/api")
 public class CardController {
     @Autowired
-    private CardRepository cardRepository;
+    private CardService cardService;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private ClientService clientService;
 
     @PostMapping("/clients/current/cards")
     public ResponseEntity<Object> createCard(@RequestParam CardType cardType,
                                              @RequestParam CardColor cardColor,
                                              Authentication authentication)
     {
-        if(clientRepository.findByEmail(authentication.getName()).getCards().size() >= 3)
+        if(clientService.clientAccountsGreaterThan3(authentication.getName()))
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        Client autenticatedClient = clientRepository.findByEmail(authentication.getName());
-
-        int numberCvv;
-        String cardNumber = "";
-
-        do{
-            numberCvv = (int)Math.floor(Math.random() * (999 - 100 + 1) + 100);
-        }while(cardRepository.existsByCvv(numberCvv));
-
-        do {
-            for (int i = 1; i <= 4; i++){
-
-                int numberSection = (int)Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
-
-                String section = "";
-
-                if(i < 4) {
-                    section = Integer.toString(numberSection) + "-";
-                } else{
-                    section = Integer.toString(numberSection);
-                }
-
-                cardNumber += section;
-
-            }
-        }while(cardRepository.existsByNumber(cardNumber));
-
-
-
-        Card newCard = new Card(autenticatedClient.getFirstName() + " " + autenticatedClient.getLastName(), cardType, cardColor, cardNumber, numberCvv, LocalDate.now(), LocalDate.now().plusYears(5));
-        autenticatedClient.addCard(newCard);
-
-        cardRepository.save(newCard);
-
+        cardService.createCardToAccount(authentication.getName(), cardType, cardColor);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
