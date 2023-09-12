@@ -7,6 +7,7 @@ import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.CardRepository;
 import com.mindhub.homebanking.services.CardService;
 import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.utils.CardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,21 +26,7 @@ public class CardServiceImplement implements CardService {
         String cardNumber = "";
 
         do {
-            for (int i = 1; i <= 4; i++){
-
-                int numberSection = (int)Math.floor(Math.random() * (9999 - 1000 + 1) + 1000);
-
-                String section = "";
-
-                if(i < 4) {
-                    section = Integer.toString(numberSection) + "-";
-                } else{
-                    section = Integer.toString(numberSection);
-                }
-
-                cardNumber += section;
-
-            }
+            cardNumber = CardUtils.getCardNumber();
         }while(cardRepository.existsByNumber(cardNumber));
 
         return cardNumber;
@@ -50,7 +37,7 @@ public class CardServiceImplement implements CardService {
         int numberCvv;
 
         do{
-            numberCvv = (int)Math.floor(Math.random() * (999 - 100 + 1) + 100);
+            numberCvv = CardUtils.getNumberCvv();
         }while(cardRepository.existsByCvv(numberCvv));
 
         return numberCvv;
